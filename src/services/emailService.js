@@ -1,38 +1,22 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
-const createTransporter = async () => {
-  // Use Ethereal for testing or Gmail for production
-  if (process.env.EMAIL_SERVICE === 'ethereal') {
-    // Create Ethereal test account
-    const testAccount = await nodemailer.createTestAccount();
-    return nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      },
-    });
-  } else {
-    // Gmail or other service
-    return nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-  }
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 };
 
 const sendOTPEmail = async (email, otp) => {
-  const transporter = await createTransporter();
+  const transporter = createTransporter();
 
   const mailOptions = {
-    from: `"CreatorConnect" <${process.env.EMAIL_USER || 'noreply@creatorconnect.com'}>`,
+    from: `"CreatorConnect" <${process.env.EMAIL_USER || "noreply@creatorconnect.com"}>`,
     to: email,
-    subject: 'Your OTP for CreatorConnect Signup',
+    subject: "Your OTP for CreatorConnect Signup",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #333;">Verify Your Email</h2>
@@ -48,22 +32,17 @@ const sendOTPEmail = async (email, otp) => {
   };
 
   const info = await transporter.sendMail(mailOptions);
-
-  // Log preview URL for Ethereal
-  if (process.env.EMAIL_SERVICE === 'ethereal') {
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-  }
-
+  console.log("✅ OTP email sent to:", email);
   return info;
 };
 
 const sendWelcomeEmail = async (email, name) => {
-  const transporter = await createTransporter();
+  const transporter = createTransporter();
 
   const mailOptions = {
-    from: `"CreatorConnect" <${process.env.EMAIL_USER || 'noreply@creatorconnect.com'}>`,
+    from: `"CreatorConnect" <${process.env.EMAIL_USER || "noreply@creatorconnect.com"}>`,
     to: email,
-    subject: 'Welcome to CreatorConnect!',
+    subject: "Welcome to CreatorConnect!",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #333;">Welcome, ${name}!</h2>
@@ -76,12 +55,7 @@ const sendWelcomeEmail = async (email, name) => {
   };
 
   const info = await transporter.sendMail(mailOptions);
-
-  // Log preview URL for Ethereal
-  if (process.env.EMAIL_SERVICE === 'ethereal') {
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-  }
-
+  console.log("✅ Welcome email sent to:", email);
   return info;
 };
 

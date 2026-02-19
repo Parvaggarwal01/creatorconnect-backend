@@ -18,29 +18,23 @@ export const initiateSignupService = async (email) => {
   await OTP.create({
     email,
     otp,
-    expiresAt: new Date(Date.now() + 5 * 60 * 1000)
+    expiresAt: new Date(Date.now() + 5 * 60 * 1000),
   });
 
   // Send OTP via email
   try {
     await emailService.sendOTPEmail(email, otp);
   } catch (error) {
-    console.error('Failed to send OTP email:', error);
-    throw new Error('Failed to send OTP email. Please try again.');
+    console.error("Failed to send OTP email:", error);
+    throw new Error("Failed to send OTP email. Please try again.");
   }
 
-  // Only return OTP in development mode (Ethereal)
-  const response = {
+  console.log("🔐 Generated OTP:", otp);
+
+  return {
     expiresIn: "5 minutes",
-    message: "OTP sent to your email"
+    message: "OTP sent to your email",
   };
-
-  // Include OTP in response only for Ethereal (testing)
-  if (process.env.EMAIL_SERVICE === 'ethereal') {
-    response.otp = otp;
-  }
-
-  return response;
 };
 
 export const verifySignupOtpService = async ({
@@ -78,22 +72,18 @@ export const verifySignupOtpService = async ({
   try {
     await emailService.sendWelcomeEmail(email, name);
   } catch (error) {
-    console.error('Failed to send welcome email:', error);
+    console.error("Failed to send welcome email:", error);
   }
 
   return {
     id: user._id,
     name: user.name,
-    email: user.email
+    email: user.email,
   };
 };
 
-
-
 export const loginService = async (email, password) => {
-  const user = await User
-    .findOne({ email })
-    .select("+password");
+  const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
     throw new Error("Invalid email or password");
@@ -108,13 +98,12 @@ export const loginService = async (email, password) => {
   const token = jwt.sign(
     {
       id: user._id,
-      role: user.role
+      role: user.role,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "1h" },
   );
   console.log(token);
-
 
   return {
     token,
@@ -122,7 +111,7 @@ export const loginService = async (email, password) => {
       id: user._id,
       name: user.name,
       email: user.email,
-      role: user.role
-    }
+      role: user.role,
+    },
   };
 };

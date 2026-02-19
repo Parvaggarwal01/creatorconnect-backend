@@ -2,11 +2,10 @@ import express from "express";
 import {
   initiateSignup,
   verifySignupOtp,
-  login
+  login,
 } from "../controllers/authController.js";
 
 const router = express.Router();
-
 
 router.post("/signup/initiate", initiateSignup);
 

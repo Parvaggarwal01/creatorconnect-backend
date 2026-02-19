@@ -1,7 +1,7 @@
 import {
   initiateSignupService,
   verifySignupOtpService,
-  loginService
+  loginService,
 } from "../services/authServices.js";
 
 export const initiateSignup = async (req, res) => {
@@ -11,7 +11,7 @@ export const initiateSignup = async (req, res) => {
     if (!email) {
       return res.status(400).json({
         success: false,
-        message: "Email is required"
+        message: "Email is required",
       });
     }
 
@@ -20,24 +20,24 @@ export const initiateSignup = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "OTP generated successfully",
-      ...result
+      ...result,
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
 
 export const verifySignupOtp = async (req, res) => {
   try {
-    const { email, otp, name, password,role } = req.body;
+    const { email, otp, name, password, role } = req.body;
 
     if (!email || !otp || !name || !password) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required"
+        message: "All fields are required",
       });
     }
 
@@ -46,22 +46,21 @@ export const verifySignupOtp = async (req, res) => {
       otp,
       name,
       password,
-      role
+      role,
     });
 
     res.status(201).json({
       success: true,
       message: "User signed up successfully",
-      user
+      user,
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
-
 
 export const login = async (req, res) => {
   try {
@@ -70,7 +69,7 @@ export const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Email and password required"
+        message: "Email and password required",
       });
     }
 
@@ -79,18 +78,18 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 60 * 60 * 1000
+      maxAge: 60 * 60 * 1000,
     });
 
     res.status(200).json({
       success: true,
       message: "Login successful",
-      ...result
+      ...result,
     });
   } catch (error) {
     res.status(401).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
