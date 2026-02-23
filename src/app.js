@@ -4,9 +4,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/authRoutes.js";
-// import artifactRoutes from "./routes/artifacts.route.js";
-// import chatRoutes from "./src/chat.route.js";
-// import webhookRoutes from "./src/webhook/webhook.js";
+import assetRoutes from "./routes/assertRoutes.js";
 
 const app = express();
 
@@ -31,8 +29,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes);
-// app.use("/artifacts", artifactRoutes);
-// app.use("/webhook", webhookRoutes);
-// app.use("/chat", chatRoutes);
+app.use("/assets", assetRoutes);
 
 export default app;
