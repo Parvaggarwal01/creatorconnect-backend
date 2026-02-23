@@ -3,6 +3,7 @@ import {
   verifySignupOtpService,
   loginService,
 } from "../services/authServices.js";
+import User from "../models/User.js";
 
 export const initiateSignup = async (req, res) => {
   try {
@@ -91,5 +92,24 @@ export const login = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const searchUsers = async (req, res) => {
+  try {
+    const search = req.query.search || "";
+    const users = await User.find({
+      _id: { $ne: req.user._id },
+      $or: [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ],
+    })
+      .select("name email role")
+      .limit(20);
+
+    res.json(users);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/authRoutes.js";
 import assetRoutes from "./routes/assertRoutes.js";
+import chatRoutes from "./routes/ChatRoutes.js";
 
 const app = express();
 
@@ -30,5 +31,6 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/assets", assetRoutes);
+app.use("/chat", chatRoutes);
 
 export default app;
